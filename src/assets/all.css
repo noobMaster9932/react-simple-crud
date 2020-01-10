@@ -1,0 +1,57 @@
+.nav-bar {
+    position: fixed;
+    top: 0px;
+    background: #fda022;
+    height: 60px;
+    padding-top: 10px;
+}
+.login-logo {
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    width: 300px;
+}
+.login-input {
+    background-color: white;
+    color: black;
+    border-color: white;
+    border-radius: 10px;
+    border-width: 1px;
+    font-size: small;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+        sans-serif;
+}
+.login-button {
+    background: blue;
+    width: 100%;
+    font-size: small;
+    border-radius: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+        sans-serif;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.login-text {
+    color: white;
+    font-family: 'Franklin Gothic Medium';
+}
+.login-container {
+    width: 400px;
+    background: #fda022;
+    padding: 0px;
+}
+.login-card {
+    background: #fda022;
+    height: 590px;
+    margin-top: 20px;
+}
+.navbar-logo {
+    position: relative;
+    top: auto;
+    bottom: auto;
+}
+.navbar-input {
+    color: black;
+    border-color: black;
+    background-color: transparent;
+}
