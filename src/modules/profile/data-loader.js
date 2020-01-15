@@ -1,16 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Loader from '@material-ui/core/LinearProgress'
 
-export class DataLoader extends Component {
-    static propTypes = {
-      isLoading: PropTypes.any
-    }
 
-    render() {
-      const { isLoading } = this.props
-      return isLoading && <Loader />
-    }
+const DataLoader = ({ isLoading }) => {
+  return isLoading && <Loader />
 }
-
+DataLoader.propTypes = {
+  isLoading: PropTypes.any
+}
 export default DataLoader

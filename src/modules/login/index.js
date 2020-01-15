@@ -1,28 +1,20 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Register from './register'
 import Login from './login'
 
-export class index extends Component {
-    state = {
-      isRegister: true
-    }
-
-    toggle = () => {
-      this.setState({ isRegister: !this.state.isRegister })
-    }
-    buttonClick = () => {
-      localStorage.setItem('isAuth', true)
-      window.location.reload()
-    }
-
-    render() {
-      const { isRegister } = this.state
-      return isRegister ? (
-        <Register toggle={this.toggle} submit={this.buttonClick} />
-      ) : (
-        <Login toggle={this.toggle} submit={this.buttonClick} />
-      )
-    }
+const index = () => {
+  const [isRegister, setRegister] = useState(true)
+  const toggle = () => setRegister(!isRegister)
+  const buttonClick = () => {
+    localStorage.setItem('isAuth', true)
+    window.location.reload()
+  }
+  return (
+    isRegister ? (
+      <Register toggle={toggle} submit={buttonClick} />
+    ) : (
+      <Login toggle={toggle} submit={buttonClick} />
+    )
+  )
 }
-
 export default index

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 
-import testReducer from './test/reducer'
 import { exploreReducer } from './explore/reducer'
+import { styleReducer } from './style/reducer'
 export default combineReducers({
-  testReducer,
-  exploreReducer
+  exploreReducer,
+  styleReducer
 })

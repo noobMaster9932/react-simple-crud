@@ -1,25 +1,25 @@
-import React, { Component, Fragment } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import DataLoader from './data-loader'
-export class index extends Component {
-    state = { isLoading: true }
-    componentDidMount() {
-      setTimeout(() => {
-        this.setState({ isLoading: false })
-      }, 4000)
-    }
-    render() {
-      const { isLoading } = this.state
-      return (
-        <Fragment>
-          <DataLoader isLoading={isLoading} />
-          <h1 className='text-center'>profile module</h1>
-        </Fragment>
-      )
-    }
-}
 
+const index = () => {
+
+  const [isLoading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(!isLoading)
+    }, 4000)
+  }, [])
+
+  return(
+    <Fragment>
+      <DataLoader isLoading={isLoading} />
+      <h1 className='text-center'>profile module</h1>
+    </Fragment>
+  )
+}
 const mapStateToProps = state => ({
   ...state
 })

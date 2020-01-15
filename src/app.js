@@ -22,29 +22,23 @@ export const app = () => {
 }
 
 export default app
-
-export class Entry extends Component {
-  render() {
-    const { match } = this.props
-    const isAuth = localStorage.getItem('isAuth')
-    return (
-      <Fragment>
-        <ErrorBoundary>
-          <Switch>
-            {!isAuth && <Route path='/login' component={login} />}
-            <Route path='/error' component={error} />
-            <Route path={`${match.url}`} component={MainApp} />
-            {isAuth ? (
-              <Redirect to='/error' />
-            ) : (
-              <Redirect to='/login' />
-            )}
-          </Switch>
-        </ErrorBoundary>
-      </Fragment>
-    )
-  }
-}
+const isAuth = localStorage.getItem('isAuth')
+const Entry = ({ match }) => (
+  <Fragment>
+    <ErrorBoundary>
+      <Switch>
+        {!isAuth && <Route path='/login' component={login} />}
+        <Route path='/error' component={error} />
+        <Route path={`${match.url}`} component={MainApp} />
+        {isAuth ? (
+          <Redirect to='/error' />
+        ) : (
+          <Redirect to='/login' />
+        )}
+      </Switch>
+    </ErrorBoundary>
+  </Fragment>
+)
 Entry.propTypes = {
   location: PropTypes.any,
   match: PropTypes.any

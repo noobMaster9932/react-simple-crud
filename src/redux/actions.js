@@ -1,3 +1,3 @@
 import exploreActions from './explore/action'
-
-export { exploreActions }
+import styleAction from './style/action'
+export { exploreActions, styleAction }

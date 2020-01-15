@@ -1,34 +1,27 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Loader from '@material-ui/core/LinearProgress'
 import Example from '../../assets/img/example-image-post.png'
 
-export class DataLoader extends Component {
-    static propTypes = {
-      isLoading: PropTypes.any,
-      dataReceived: PropTypes.func
+const DataLoader = ({ isLoading, dataReceived }) => {
+  useEffect(() => {
+    if (isLoading) {
+      dataReceived({
+        dataStates: {
+          filter: 'test',
+          sort: 'test'
+        },
+        dataGrid: dataDummy
+      })
     }
-
-    requestDataIfNeeded = () => {
-      const { isLoading, dataReceived } = this.props
-      if (isLoading) {
-        dataReceived({
-          dataStates: {
-            filter: 'test',
-            sort: 'test'
-          },
-          dataGrid: dataDummy
-        })
-      }
-    }
-    render() {
-      const { isLoading } = this.props
-      this.requestDataIfNeeded()
-      return isLoading && <Loader />
-    }
+  })
+  return isLoading && <Loader />
 }
-
 export default DataLoader
+DataLoader.propTypes = {
+  isLoading: PropTypes.any,
+  dataReceived: PropTypes.func
+}
 const dataDummy = [
   {
     time: '2 minutes ago',

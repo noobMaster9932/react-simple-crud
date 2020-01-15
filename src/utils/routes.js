@@ -1,11 +1,8 @@
 import React from 'react'
 import Loadable from 'react-loadable'
-// import Dashboard from '../modules/default'
-// import Chats from '../modules/chats'
-// import Order from '../modules/order'
-// import Profile from '../modules/profile'
 
-const Loading = () => <h1 className='text-center mt-2'>Loading</h1>
+
+const Loading = () => <div className='loader' />
 
 const Dashboard = Loadable({
   loader: () => import('../modules/default'),
