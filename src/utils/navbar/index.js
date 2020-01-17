@@ -1,27 +1,17 @@
 import React from 'react'
-import { NavbarBrand, Navbar, Container, Row, Col } from 'reactstrap'
+import { Navbar, Container, Row, Col } from 'reactstrap'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-const index = ({ status, toggleSideBar, history }) => {
+const index = ({ history, marginLeft, fullWidth }) => {
   
   return (
     <Navbar
       className={'fixed-top '}
       color-on-scroll='100'
       expand='lg'
-      style={{ background: '#CCD1D1' }}
+      style={{ background: '#33BBAD', marginLeft:marginLeft, borderRadius:5, height:50, marginTop:5, marginRight:fullWidth <=800? 5:25 }}
     >
-      <NavbarBrand
-        data-placement='bottom'
-        rel='noopener noreferrer'
-      >
-        <img
-          src={require('../../assets/icons/menu.png')}
-          width='25px'
-          style={{ cursor: 'pointer', marginLeft:20 }}
-          onClick={() => toggleSideBar(!status)}
-        />
-      </NavbarBrand>
       <Container>
         <div className='navbar-translate'>
         </div>
@@ -58,6 +48,9 @@ const index = ({ status, toggleSideBar, history }) => {
 index.propTypes = {
   history: PropTypes.object,
   toggleSideBar:PropTypes.func,
-  status:PropTypes.bool
+  status:PropTypes.bool,
+  marginLeft:PropTypes.number,
+  fullWidth:PropTypes.number
 }
-export default index
+const mapStateToProps = s => ({ ...s.styleReducer })
+export default connect(mapStateToProps, {})(index)

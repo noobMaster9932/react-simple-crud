@@ -1,90 +1,47 @@
-import React, { useState, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import DataLoader from './data-loader'
 import { Card, CardBody, Row, Col } from 'reactstrap'
 import { exploreActions } from '../../redux/actions'
-import moment from 'moment'
-import ManAvatar from '../../assets/img/avatar-man.png'
-import WomanAvatar from '../../assets/img/avatar-woman.png'
-import ModalDetail from './details'
+import { LineChart, BarChart, PieChart, RadarChart } from './charts'
+
 const { getDataAction } = exploreActions
 
-const index = ({ isLoading, getData, dataGrid }) => {
-  const [modal, setModal] = useState({ status:false, data:{} })
-  const _toggleModal = (status, data = {}) => setModal({ modal:{ status, data } })
+const index = ({ isLoading, getData, dataGrid, style }) => {
   return (
     <Fragment>
-      { modal.status && <ModalDetail data={modal.data} close={() => _toggleModal(false)} /> }
+      <DataLoader isLoading={isLoading} dataReceived={getData} />
+      <Row className='mb-3'>
+        <Col>
+          <SubComponentChart isLoading={isLoading} style={style} >
+            <LineChart data={dataGrid.lineChart} />
+          </SubComponentChart>
+        </Col>
+        <Col>
+          <SubComponentChart isLoading={isLoading} style={style} >
+            <BarChart data={dataGrid.barChart} />
+          </SubComponentChart>
+        </Col>
+      </Row>
       <Row>
-        <Col className='col-sm-7'>
-          <DataLoader isLoading={isLoading} dataReceived={getData} />
-          {dataGrid.map((item, i) => (
-            <Card key={Math.random()} className='mb-2'>
-              <CardBody>
-                <div className='text-left mb-3'>
-                  <img
-                    src={
-                      i % 2 === 0
-                        ? ManAvatar
-                        : WomanAvatar
-                    }
-                    style={{
-                      borderRadius: '50%',
-                      width: 30,
-                      cursor: 'pointer'
-                    }}
-                  />
-                  <small
-                    className='ml-2'
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {item.name}
-                  </small>
-                </div>
-                {item.attachment !== null && (
-                  <div className='text-center mb-2'>
-                    <img
-                      src={item.attachment}
-                      style={{ width: '100%', cursor:'pointer' }}
-                      onClick={() => _toggleModal(true,item)}
-                    />
-                  </div>
-                )}
-                <div className='mb-2' 
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => _toggleModal(true,item)} 
-                >
-                  {item.post}
-                </div>
-                <div className='text-left'>
-                  <img
-                    style={{ width: 30, cursor: 'pointer' }}
-                    className='mr-2'
-                    src={require('../../assets/icons/icon-like.png')}
-                  />
-                  <img
-                    style={{ width: 30, cursor: 'pointer' }}
-                    className='mr-2'
-                    src={require('../../assets/icons/icon-comment.png')}
-                  />
-                </div>
-                <small
-                  style={{ color: 'gray' }}
-                  className='text-left mb-2'
-                >
-                  {moment().format('HH:mm')}
-                </small>
-              </CardBody>
-            </Card>
-          ))}
+        <Col>
+          <SubComponentChart isLoading={isLoading} style={style} >
+            <PieChart data={dataGrid.pieChart} />
+          </SubComponentChart>
+        </Col>
+        <Col>
+          <SubComponentChart isLoading={isLoading} style={style} >
+            <RadarChart data={dataGrid.radarChart} />
+          </SubComponentChart>
         </Col>
       </Row>
     </Fragment>
   )
 }
 const mapStateToProps = state => ({
-  ...state.exploreReducer
+  ...state.exploreReducer,
+  style:state.styleReducer
 })
 
 const mapDispatchToProps = { getData: getDataAction }
@@ -92,7 +49,25 @@ const mapDispatchToProps = { getData: getDataAction }
 index.propTypes = {
   getData: PropTypes.func,
   isLoading: PropTypes.bool,
-  dataGrid: PropTypes.array
+  dataGrid: PropTypes.any,
+  style:PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(index)
+
+const SubComponentChart = (props) => {
+  const width = props.style.fullWidth <=800 ? props.style.fullWidth - 100 : props.style.fullWidth/2 - 80
+  return props.isLoading ? <div className='loader' />: (
+    <Card style={{ height:400, width:width }}  >
+      <CardBody style={{ height:400, width:width }} >
+        { props.children }
+        { props.style.fullWidth <=800 && <div className='mb-3' /> }
+      </CardBody>
+    </Card>
+  )
+}
+SubComponentChart.propTypes = {
+  style:PropTypes.object,
+  isLoading:PropTypes.bool,
+  children:PropTypes.any
+}

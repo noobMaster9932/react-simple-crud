@@ -6,7 +6,7 @@ const initialState = {
     sort: null
   },
   isLoading: true,
-  dataGrid: []
+  dataGrid: {}
 }
 export const exploreReducer = (state = { ...initialState }, action) => {
   switch (action.type) {

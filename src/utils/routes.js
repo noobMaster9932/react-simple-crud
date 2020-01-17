@@ -9,24 +9,20 @@ const Dashboard = Loadable({
   loading: Loading
 })
 
-const Chats = Loadable({
-  loader: () => import('../modules/chats'),
-  loading: Loading
-})
-
-const Order = Loadable({
-  loader: () => import('../modules/order'),
-  loading: Loading
-})
 
 const Profile = Loadable({
   loader: () => import('../modules/profile'),
   loading: Loading
 })
+const WorkOrder = Loadable({
+  loader:() => import('../modules/master-data/work-order'),
+  loading: Loading
+})
 
 export default [
   { component: Dashboard, path: '/explore' },
-  { component: Chats, path: '/chats' },
-  { component: Order, path: '/order' },
-  { component: Profile, path: '/profile' }
+  { component: Profile, path: '/profile' },
+  { component: WorkOrder, path:'/master-data/work-order' },
+  { component: WorkOrder, path:'/master-data/department' },
+  { component: WorkOrder, path:'/transaction/sync' }
 ]

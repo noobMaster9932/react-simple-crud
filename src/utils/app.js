@@ -2,17 +2,17 @@ import React, { Fragment, useState, useEffect } from 'react'
 import { Route, withRouter, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Container } from 'reactstrap'
 
 import Routes from './routes'
-import Navbar from './navbar'
 import Sidebar from './sidebar'
-import { CSSTransition } from 'react-transition-group'
+import Navbar from './navbar'
 import { styleAction } from '../redux/actions'
 
 const isAuth = localStorage.getItem('isAuth')
 const app = ({ location, history, resize }) => {
-  const [ showSideBar, toggleSideBar ] = useState(true)
+
+  const [ expandSidebar, toggleSideBar ] = useState(false)
+
   useEffect(() => {
     window.addEventListener('resize', () => {
       const { innerWidth, innerHeight } = window
@@ -22,19 +22,14 @@ const app = ({ location, history, resize }) => {
       window.removeEventListener('resize', () => {})
     }
   }, [])
+
   const _toggleSideBar = status => toggleSideBar(status)
+
   return (
     <Fragment>
-      <Navbar history={history} toggleSideBar={_toggleSideBar} status={showSideBar} />
-      <CSSTransition 
-        in={showSideBar} 
-        timeout={5000} 
-        unmountOnExit 
-        classNames='sidebarstyle' 
-      >
-        <Sidebar history={history} />
-      </CSSTransition>
-      <Container style={{ marginTop:70, marginLeft:showSideBar ? 120:0 }}>
+      <Sidebar history={history} setMargin={_toggleSideBar} selected={expandSidebar} />
+      <Navbar history={history} marginLeft={expandSidebar ? 250:80}  />
+      <div style={appStyle(expandSidebar)}>
         <Switch>
           {Routes.filter(e =>
             isAuth ? e.path !== '/login' : e.path === false
@@ -55,7 +50,7 @@ const app = ({ location, history, resize }) => {
             <Redirect to='/login' />
           )}
         </Switch>
-      </Container>
+      </div>
     </Fragment>
   )
 }
@@ -74,3 +69,12 @@ const mapDispatchToProps = {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(app))
+
+const appStyle = expandSidebar => ({
+  margin:0, 
+  padding:0, 
+  marginTop:65, 
+  paddingLeft:expandSidebar ? 250:80, 
+  paddingRight:20, 
+  paddingBottom:10
+})
