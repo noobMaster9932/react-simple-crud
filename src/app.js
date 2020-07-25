@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Route, HashRouter, Switch, Redirect } from 'react-router-dom'
+import { Route, HashRouter, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 
@@ -22,19 +22,13 @@ export const app = () => {
 }
 
 export default app
-const isAuth = localStorage.getItem('isAuth')
 const Entry = ({ match }) => (
   <Fragment>
     <ErrorBoundary>
       <Switch>
-        {!isAuth && <Route path='/login' component={login} />}
+        <Route path='/login' component={login} />
         <Route path='/error' component={error} />
         <Route path={`${match.url}`} component={MainApp} />
-        {isAuth ? (
-          <Redirect to='/error' />
-        ) : (
-          <Redirect to='/login' />
-        )}
       </Switch>
     </ErrorBoundary>
   </Fragment>

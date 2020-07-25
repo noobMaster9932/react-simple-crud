@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { Route, withRouter, Switch, Redirect } from 'react-router-dom'
+import { Route, withRouter, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -8,9 +8,7 @@ import Sidebar from './sidebar'
 import Navbar from './navbar'
 import { styleAction } from '../redux/actions'
 
-const isAuth = localStorage.getItem('isAuth')
-const app = ({ location, history, resize }) => {
-
+const app = ({ history, resize, location }) => {
   const [ expandSidebar, toggleSideBar ] = useState(false)
 
   useEffect(() => {
@@ -31,24 +29,8 @@ const app = ({ location, history, resize }) => {
       <Navbar history={history} marginLeft={expandSidebar ? 250:80}  />
       <div style={appStyle(expandSidebar)}>
         <Switch>
-          {Routes.filter(e =>
-            isAuth ? e.path !== '/login' : e.path === false
-          ).map(item => (
-            <Route
-              key={Math.random()}
-              path={item.path}
-              component={item.component}
-            />
-          ))}
-          {!isAuth && <Redirect to='/login' />}
-          {(location.pathname === '/' ||
-                            location.pathname === '/login') &&
-                            isAuth && <Redirect to='/explore' />}
-          {isAuth ? (
-            <Redirect to='/error' />
-          ) : (
-            <Redirect to='/login' />
-          )}
+          <Route path='/explore' component={Routes.Dashboard} />
+          <Routes.RouteComponent location={location}/>
         </Switch>
       </div>
     </Fragment>

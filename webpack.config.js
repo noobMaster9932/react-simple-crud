@@ -1,9 +1,10 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin')
-const path = require('path')
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const workboxPlugin = require('workbox-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const BUILD_DIR = path.resolve(__dirname, 'dist')
 const BrotliPlugin = require('brotli-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 module.exports = {
   module: {
     rules: [
@@ -23,8 +24,27 @@ module.exports = {
         ]
       },
       {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'svg-url-loader',
+            options: {
+              limit: 10000,
+              name: 'assets/svg/[name].[hash].[ext]'
+            },
+          },
+        ],
+      },
+      {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'file-loader',
+        options: {
+          name: 'assets/font/[name].[ext]',
+        },
       },
       {
         test: /\.(png|jpg|jpeg|gif|ico)$/,
@@ -32,12 +52,55 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: './img/[name].[hash].[ext]'
+              name: 'assets/img/[name].[hash].[ext]'
             }
           }
         ]
       }
     ]
+  },
+  optimization: {
+    minimize:true,
+    minimizer: [
+      new TerserPlugin({
+        cache:true,
+        parallel: true,
+        terserOptions: {
+          ecma: 6,
+          compress:true,
+          mangle:true
+        },
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ],
+    splitChunks: {
+      minSize: 400000,
+      maxSize: 550000,
+      minChunks: 2,
+      automaticNameDelimiter: '.',
+      name: true,
+      cacheGroups: {
+        vendors: {
+          name: 'lib',
+          chunks: 'initial',
+          enforce: true,
+          reuseExistingChunk: true,
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          name: 'app',
+          enforce: true,
+          chunks: 'initial',
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  },
+  performance: {
+    hints: process.env.NODE_ENV === 'production' ? 'warning' : false
   },
   plugins: [
     new HtmlWebPackPlugin({
@@ -48,16 +111,13 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: './public/extras/manifest.json', to: 'extras' }
     ]),
-    new SWPrecacheWebpackPlugin({
-      cacheId: 'ajarindong',
-      filename: 'service-worker.js',
-      navigateFallback: '/index.html',
-      stripPrefix: BUILD_DIR,
-      staticFileGlobs: [
-        `${BUILD_DIR}/index.html`,
-        `${BUILD_DIR}/service-worker.js`,
-        `${BUILD_DIR}/favicon.ico`
-      ]
+    new MiniCssExtractPlugin({
+      filename: 'assets/css/[name].css'
+    }),
+    new workboxPlugin.GenerateSW({
+      swDest: 'service-worker.js',
+      clientsClaim: true,
+      skipWaiting: true
     }),
     new BrotliPlugin({
       filename: '[path].br[query]',
